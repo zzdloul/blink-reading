@@ -1,0 +1,111 @@
+.site-header { display: grid; grid-template-columns: auto 1fr auto; gap: 28px; }
+.site-header .mode-nav { display: flex; justify-self: center; gap: 4px; padding: 4px; background: #edf0e9; border-radius: 12px; }
+.mode-nav a { display: flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 22px; border-radius: 8px; font-size: 15px; color: var(--muted); white-space: nowrap; }
+.mode-nav a[aria-current] { background: white; color: var(--green); font-weight: 650; box-shadow: 0 1px 3px #21352410; }
+.mode-nav a:hover { color: var(--green); }
+.tracker { min-width: 0; outline: none; }
+.tracking-stage { position: relative; height: 456px; }
+.tracking-arena { position: absolute; inset: 42px 18px 62px; overflow: hidden; }
+.tracking-route { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.tracking-route path { stroke: #a7bc9c; stroke-width: 1.4; stroke-dasharray: 3 6; stroke-linecap: round; }
+.tracking-target { position: absolute; top: 0; left: 0; width: var(--target-size, 24px); height: var(--target-size, 24px); margin: 0; background: var(--green); border-radius: 50%; box-shadow: 0 0 0 5px #d9efc9; display: grid; place-items: center; will-change: transform; pointer-events: none; }
+.tracking-target span { width: 24%; height: 24%; border-radius: 50%; background: #e0f7c4; }
+.tracking-hint { position: absolute; top: 16px; left: 12px; right: 12px; color: var(--muted); font-size: 13px; text-align: center; line-height: 1.6; z-index: 1; }
+.tracking-losses { margin-left: auto; font-size: 12px; font-variant-numeric: tabular-nums; }
+.tracking-losses b { font-weight: 500; }
+.route-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.route-choices button { display: flex; align-items: center; justify-content: flex-start; gap: 10px; min-height: 48px; border: 1px solid var(--line); border-radius: 9px; background: transparent; font-size: 14px; padding: 9px 12px; white-space: nowrap; }
+.route-choices button:last-child { grid-column: 1 / -1; }
+.route-choices button svg { width: 35px; height: 22px; fill: none; stroke: #82947a; stroke-width: 1.6; stroke-linecap: round; }
+.route-choices button[aria-pressed="true"] { background: #def3c2; border-color: #91d84d; color: var(--green); font-weight: 650; }
+.route-choices button[aria-pressed="true"] svg { stroke: var(--green); }
+.route-choices button:hover { background: var(--soft); }
+.tracking-settings h2 { font-size: 24px; }
+.tracking-settings .setting-group { margin-bottom: 22px; }
+.tracking-guide-setting .check-row { font-size: 14px; }
+.tracking-transport { gap: 10px; }
+.tracking-transport .primary-button { flex: 1 1 160px; max-width: 290px; }
+.tracking-transport .secondary-button { padding: 12px 20px; }
+.tracking-lost-button { background: #f9faf7; color: var(--green); border-color: #b7c5ac; }
+.tracking-transport-note { margin-top: 14px; color: var(--muted); font-size: 13px; min-height: 22px; line-height: 1.7; }
+.tracking-result { padding-top: 40px; }
+.tracking-result #tracking-result-message { font-size: 14px; margin-bottom: 15px; }
+.tracking-disclaimer { color: var(--muted); font-size: 12px; text-align: center; margin-top: 16px; line-height: 1.8; }
+.tracking-tip { margin-top: 26px; }
+.guide-details a { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+body.tracking-focus { overflow: hidden; }
+body.tracking-focus .tracker { position: fixed; inset: 0; z-index: 10; padding: max(20px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)); background: var(--bg); display: flex; flex-direction: column; }
+body.tracking-focus .tracker .stage-frame { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+body.tracking-focus .tracking-stage { flex: 1; height: auto; min-height: 160px; }
+body.tracking-focus .tracking-arena { inset: 42px 12px 60px; }
+body.tracking-focus .tracking-transport { justify-content: center; }
+body.tracking-focus .tracking-transport .stop-button { margin-left: 16px; }
+body.tracking-focus .tracking-transport-note { text-align: center; margin-top: 8px; font-size: 12px; }
+body.tracking-focus .tracker .progress-row { margin: 12px 0 16px; }
+body.tracking-focus .tracking-result { max-width: 700px; }
+@media (max-width: 1200px) {
+  .site-header { gap: 18px; }
+  .site-header .utility-nav { gap: 24px; }
+  .mode-nav a { padding-inline: 16px; }
+  .route-choices button { font-size: 13px; gap: 8px; padding-inline: 9px; }
+  .route-choices button svg { width: 27px; }
+}
+@media (max-width: 820px) {
+  .site-header { grid-template-columns: auto 1fr; row-gap: 16px; }
+  .site-header .utility-nav { justify-self: end; grid-column: 2; grid-row: 1; }
+  .site-header .mode-nav { grid-row: 2; grid-column: 1 / -1; justify-self: stretch; }
+  .mode-nav a { flex: 1; min-height: 42px; }
+  .tracking-settings .tracking-route-group { grid-column: 1 / -1; }
+  .route-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .route-choices button:last-child { grid-column: auto; }
+  .tracking-guide-setting { grid-column: 1 / -1; }
+  .tracking-settings .font-group { grid-column: auto; }
+}
+@media (max-width: 480px) {
+  .site-header { gap: 12px 10px; }
+  .site-header .utility-nav { gap: 18px; }
+  .mode-nav a { font-size: 14px; min-height: 40px; }
+  .tracking-intro h1 { font-size: 29px; }
+  .tracking-intro p { font-size: 14px; }
+  .tracking-stage { height: 318px; min-height: 318px; }
+  .tracking-arena { inset: 42px 8px 58px; }
+  .tracking-hint { font-size: 11px; top: 16px; }
+  .tracking-losses { font-size: 10px; }
+  .tracking-settings h2 { font-size: 22px; }
+  .route-choices { grid-template-columns: 1fr 1fr; }
+  .route-choices button { justify-content: center; font-size: 13px; }
+  .route-choices button:last-child { grid-column: 1 / -1; }
+  .route-choices button svg { width: 34px; }
+  .tracking-transport { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .tracking-transport .primary-button { grid-column: span 2; width: 100%; max-width: none; font-size: 16px; padding: 10px; min-height: 50px; }
+  .tracking-transport .secondary-button { min-height: 50px; font-size: 14px; padding: 10px 8px; }
+  .tracking-transport .tracking-lost-button { grid-column: span 2; }
+  .tracking-transport .stop-button { grid-column: span 2; justify-self: stretch; margin: 0; min-height: 50px; }
+  .tracking-transport-note { font-size: 11px; margin-top: 10px; }
+  .tracking-tip { display: block; }
+  .tracking-tip strong { display: block; margin-bottom: 5px; }
+  .tracking-disclaimer { font-size: 11px; text-align: left; }
+  .tracking-result { padding: 20px 10px 45px; }
+  .tracking-result h3 { font-size: 21px; }
+  .tracking-result #tracking-result-message { font-size: 12px; margin-bottom: 10px; }
+  body.tracking-focus .tracker { padding: 12px 12px max(12px, env(safe-area-inset-bottom)); }
+  body.tracking-focus .tracker .stage-heading { gap: 10px; }
+  body.tracking-focus .tracker .stage-heading .text-button { font-size: 12px; }
+  body.tracking-focus .tracking-transport .stop-button { margin: 0; }
+  body.tracking-focus .tracking-transport-note { font-size: 10px; margin-top: 6px; }
+  body.tracking-focus .tracker .progress-row { margin: 10px 0; }
+  body.tracking-focus .tracking-stage { min-height: 130px; }
+  body.tracking-focus .tracking-arena { inset: 36px 4px 45px; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  body.tracking-focus .tracker { padding: 8px 16px; }
+  body.tracking-focus .tracker .stage-frame { padding: 8px 12px; }
+  body.tracking-focus .tracker .stage-heading { margin-bottom: 4px; min-height: 24px; }
+  body.tracking-focus .tracking-stage { min-height: 100px; }
+  body.tracking-focus .tracking-hint { display: none; }
+  body.tracking-focus .tracking-arena { inset: 4px 24px 40px; }
+  body.tracking-focus .tracking-transport-note { display: none; }
+  body.tracking-focus .tracker .progress-row { margin: 8px 0; }
+  body.tracking-focus .tracker .primary-button, body.tracking-focus .tracker .secondary-button { min-height: 42px; padding: 7px 20px; font-size: 15px; }
+  body.tracking-focus .tracker .focus-font-tools { margin-top: 8px; }
+}

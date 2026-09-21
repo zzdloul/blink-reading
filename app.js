@@ -263,8 +263,8 @@ $('apply-suggestion').addEventListener('click', () => {
   setTiming(suggestion.exposure, suggestion.gap);
   $('apply-suggestion').hidden = true; $('result-advice').textContent = '已调整，下轮会采用新节奏。';
 });
-$('history-open').addEventListener('click', () => openDialog('history-dialog'));
-$('guide-open').addEventListener('click', () => openDialog('guide-dialog'));
+$('history-open').addEventListener('click', () => { if (!$('reading-panel').hidden) openDialog('history-dialog'); });
+$('guide-open').addEventListener('click', () => { if (!$('reading-panel').hidden) openDialog('guide-dialog'); });
 $('custom-open').addEventListener('click', () => openDialog('custom-dialog'));
 document.querySelectorAll('.close-dialog').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
 document.querySelectorAll('dialog').forEach(dialog => dialog.addEventListener('click', event => {
@@ -293,7 +293,9 @@ $('cancel-clear').addEventListener('click', renderHistory);
 $('focus-toggle').addEventListener('click', () => setFocus(!document.body.classList.contains('focus-mode')));
 $('focus-exit').addEventListener('click', () => setFocus(false));
 document.addEventListener('keydown', event => {
+  if ($('reading-panel').hidden) return;
   if (document.querySelector('dialog[open]') || event.ctrlKey || event.altKey || event.metaKey || event.repeat) return;
+  if (event.key === 'Escape') { event.preventDefault(); pause(); setFocus(false); return; }
   if (event.target.matches('input,textarea,select,[contenteditable="true"]')) return;
   if (event.code === 'Space') {
     if (event.target.closest('button,summary,a')) return;
@@ -302,7 +304,7 @@ document.addEventListener('keydown', event => {
     event.preventDefault(); changeSpeed(event.key === 'ArrowUp' ? 'faster' : 'slower');
   } else if (event.key.toLowerCase() === 'f') {
     event.preventDefault(); setFocus(!document.body.classList.contains('focus-mode'));
-  } else if (event.key === 'Escape') { pause(); setFocus(false); }
+  }
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden) pause('页面离开时已自动休息，回来后点继续即可。'); });
 window.addEventListener('pagehide', () => pause());
@@ -310,3 +312,6 @@ window.addEventListener('resize', () => render(true));
 const loop = now => { if (active()) { session.tick(now); render(); } requestAnimationFrame(loop); };
 syncSettings();
 requestAnimationFrame(loop);
+
+export function suspendReading() { pause(); setFocus(false); }
+export function refreshReading() { render(true); }

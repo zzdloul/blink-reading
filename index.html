@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f7f8f6">
-  <meta name="description" content="瞬读：数字、中文、英文快速闪现，在心里默念，按自己的节奏练习。免费，无需登录。">
+  <meta name="description" content="瞬读：自由默念与视线追踪两种练习，手机可用，自主调节速度与大小。免费，无需登录。">
   <title>瞬读 blink · 找到你的默念节奏</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css">
-  <script type="module" src="./app.js"></script>
+  <link rel="stylesheet" href="./tracking.css?v=2">
+  <script type="module" src="./shell.js?v=2"></script>
 </head>
 <body>
   <a class="skip-link" href="#trainer">跳到训练区</a>
@@ -18,9 +19,11 @@
         <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11 3H6a3 3 0 0 0-3 3v5M21 3h5a3 3 0 0 1 3 3v5M29 21v5a3 3 0 0 1-3 3h-5M11 29H6a3 3 0 0 1-3-3v-5" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/></svg>
         <strong>瞬读</strong><span>blink</span>
       </a>
-      <nav aria-label="主要导航"><button type="button" id="history-open">训练记录</button><button type="button" id="guide-open">使用指南</button></nav>
+      <nav class="mode-nav" aria-label="训练模式"><a href="#reading" data-mode="reading" aria-current="page">瞬读默念</a><a href="#tracking" data-mode="tracking">视线追踪</a></nav>
+      <nav class="utility-nav" aria-label="主要导航"><button type="button" id="history-open">训练记录</button><button type="button" id="guide-open">使用指南</button></nav>
     </header>
     <main>
+      <section id="reading-panel" aria-label="瞬读默念模式">
       <section class="intro" aria-labelledby="page-title"><h1 id="page-title">跟上眼前这一瞬。</h1><p>让目光专注，让默念跟上自己的节奏。</p></section>
       <div class="workspace">
         <section class="trainer" id="trainer" aria-label="默念训练" tabindex="-1">
@@ -62,6 +65,55 @@
         </aside>
       </div>
       <div class="practice-tip"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18h6m-5 3h4M8.5 15c0-2-3-3-3-6a6.5 6.5 0 0 1 13 0c0 3-3 4-3 6v1h-7v-1Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>练习小提示</strong><p>先读清，再提速。连续跟不上时，慢一点也很好。</p></div>
+      </section>
+
+      <section id="tracking-panel" aria-label="视线追踪模式" hidden>
+        <div class="intro tracking-intro"><h1>让视线，跟着轨迹走。</h1><p>看住圆点，让目光平稳地跟随。</p></div>
+        <div class="workspace">
+          <section class="tracker" id="tracker" aria-label="视线追踪训练" tabindex="-1">
+            <div class="stage-frame">
+              <div class="stage-heading"><h2>持续跟随</h2><span class="status"><i id="tracking-status-dot"></i><span id="tracking-status">准备好了</span></span><button type="button" id="tracking-focus-exit" class="text-button" hidden>退出专注</button></div>
+              <div class="stage tracking-stage" id="tracking-stage">
+                <p class="tracking-hint" id="tracking-hint">先看住绿色圆点，再开始移动。</p>
+                <div class="tracking-arena" id="tracking-arena" aria-label="移动目标与轨迹">
+                  <svg class="tracking-route" id="tracking-route" aria-hidden="true"><path id="tracking-path" fill="none"/></svg>
+                  <div class="tracking-target" id="tracking-target" role="img" aria-label="用目光跟随的绿色圆点"><span></span></div>
+                </div>
+                <div class="result tracking-result" id="tracking-result" hidden>
+                  <p class="result-overline">本轮已结束</p><h3>跟随的感觉，记下来。</h3>
+                  <div class="result-metrics"><div><strong id="tracking-result-time">00:00</strong><span>实际播放时长</span></div><div><strong id="tracking-result-lost">0</strong><span>自报跟丢次数</span></div></div>
+                  <p id="tracking-result-message">刚才的路线，你跟上了吗？</p>
+                  <div class="feeling-buttons" aria-label="追踪自我感受"><button type="button" data-tracking-feeling="easy">轻松跟上</button><button type="button" data-tracking-feeling="okay">刚刚好</button><button type="button" data-tracking-feeling="hard">有点吃力</button></div>
+                  <p class="result-advice" id="tracking-advice">先保持稳定，再尝试更快或更复杂的路线。</p>
+                </div>
+                <div class="stage-bottom"><span id="tracking-route-label">水平往返</span><span class="tracking-losses" id="tracking-losses">自报跟丢 <b id="tracking-lost-count">0</b> 次</span><button type="button" class="icon-button" id="tracking-focus" aria-label="进入追踪专注模式" aria-pressed="false" title="专注模式（F）"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+              </div>
+            </div>
+            <div class="focus-font-tools" id="tracking-focus-tools" hidden><label for="tracking-focus-size">圆点大小</label><input type="range" id="tracking-focus-size" min="6" max="64" value="24"><output for="tracking-focus-size" id="tracking-focus-size-value">24 px</output></div>
+            <div class="progress-row"><progress id="tracking-progress" max="1" value="0" aria-label="追踪练习进度" aria-hidden="true"></progress><span><time id="tracking-time">00:00</time> / <span id="tracking-duration-label">不限时</span></span></div>
+            <div class="transport tracking-transport"><button type="button" class="primary-button" id="tracking-play">开始追踪</button><button type="button" class="secondary-button tracking-lost-button" id="tracking-lost" hidden>跟丢了</button><button type="button" class="secondary-button" id="tracking-slower" title="降低 0.1 倍速度">减速</button><button type="button" class="secondary-button" id="tracking-faster" title="增加 0.1 倍速度">提速</button><button type="button" class="text-button stop-button" id="tracking-stop" hidden>结束本轮</button></div>
+            <p class="tracking-transport-note" id="tracking-transport-note">不用点圆点，用目光跟随即可。</p>
+            <p id="tracking-announcement" class="sr-only" aria-live="polite"></p>
+          </section>
+          <aside class="settings tracking-settings" aria-labelledby="tracking-settings-title">
+            <h2 id="tracking-settings-title">从平稳跟随开始</h2>
+            <fieldset class="setting-group tracking-route-group"><legend>运动路线</legend><div class="route-choices">
+              <button type="button" data-path="horizontal" aria-pressed="true"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M4 12h40"/></svg><span>水平往返</span></button>
+              <button type="button" data-path="vertical" aria-pressed="false"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M24 3v18"/></svg><span>垂直往返</span></button>
+              <button type="button" data-path="oval" aria-pressed="false"><svg viewBox="0 0 48 24" aria-hidden="true"><ellipse cx="24" cy="12" rx="18" ry="8"/></svg><span>椭圆环绕</span></button>
+              <button type="button" data-path="eight" aria-pressed="false"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M24 12C0-14 0 38 24 12S48 38 24 12"/></svg><span>8 字环绕</span></button>
+              <button type="button" data-path="wander" aria-pressed="false"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M4 17C2 0 21 0 20 13S40 25 43 7"/></svg><span>自由曲线</span></button>
+            </div></fieldset>
+            <div class="setting-group timing-group"><div class="setting-label"><label for="tracking-speed">移动速度</label><output for="tracking-speed" id="tracking-speed-value">0.7 倍</output></div><input id="tracking-speed" type="range" min="0.3" max="2.5" step="0.1" value="0.7"><div class="range-scale"><span>0.3 · 慢</span><span>2.5 · 快</span></div></div>
+            <div class="setting-group font-group"><div class="setting-label"><label for="tracking-size">圆点大小</label><div class="pixel-input"><input type="number" id="tracking-size-number" aria-label="圆点大小像素" min="6" max="64" value="24"><span>px</span></div></div><input id="tracking-size" type="range" min="6" max="64" value="24"><div class="range-scale"><span>6 px</span><span>64 px</span></div></div>
+            <fieldset class="setting-group"><legend>活动范围</legend><div class="segmented"><button type="button" data-tracking-range="0.45" aria-pressed="false">小范围</button><button type="button" data-tracking-range="0.7" aria-pressed="true">适中</button><button type="button" data-tracking-range="0.9" aria-pressed="false">大范围</button></div></fieldset>
+            <fieldset class="setting-group" id="tracking-duration-field"><legend>每轮时长</legend><div class="segmented"><button type="button" data-tracking-duration="0" aria-pressed="true">不限时</button><button type="button" data-tracking-duration="60" aria-pressed="false">1分钟</button><button type="button" data-tracking-duration="120" aria-pressed="false">2分钟</button><button type="button" data-tracking-duration="300" aria-pressed="false">5分钟</button></div></fieldset>
+            <div class="tracking-guide-setting"><label class="check-row"><input type="checkbox" id="tracking-guide" checked>显示轨迹引导线</label><p class="field-note">熟悉路线后可以隐藏引导线。改路线或范围会先暂停，重新看住圆点再继续。</p></div>
+          </aside>
+        </div>
+        <div class="practice-tip tracking-tip"><strong>循序练习</strong><p>先慢速水平往返，再试椭圆、8 字和自由曲线。跟不上就点「跟丢了」，减速后继续。</p></div>
+        <p class="tracking-disclaimer">本工具不检测眼动；时长与自报次数不代表追踪准确率。感到眼酸、头晕或不舒服时，请停止并休息。</p>
+      </section>
     </main>
     <footer>只和上一次的自己比较。</footer>
   </div>
@@ -92,6 +144,24 @@
   <dialog id="history-dialog" aria-labelledby="history-title"><div class="dialog-heading"><h2 id="history-title">每一次专注，都有迹可循。</h2><button type="button" class="icon-button close-dialog" aria-label="关闭训练记录">×</button></div><p class="dialog-lead">最近 100 轮记录，仅保存在当前浏览器。</p><div id="history-summary" class="history-summary"></div><div id="history-list"></div><div class="dialog-actions"><button type="button" class="text-button" id="clear-history">清空记录</button><button type="button" class="text-button" id="cancel-clear" hidden>取消</button><span id="clear-hint" class="field-note"></span></div></dialog>
 
   <dialog id="custom-dialog" aria-labelledby="custom-title"><form id="custom-form"><div class="dialog-heading"><h2 id="custom-title">练你想记住的词。</h2><button type="button" class="icon-button close-dialog" aria-label="关闭自定义词库">×</button></div><label for="custom-text" class="dialog-lead">每行一个词，也可以用逗号分开。数字、中文和英文都可以。</label><textarea id="custom-text" rows="9" maxlength="15000" spellcheck="false" placeholder="专注&#10;rhythm&#10;2048&#10;清风" aria-describedby="custom-error custom-help"></textarea><p id="custom-help" class="field-note">2–500 个不同内容，每个最多 24 个字。重复内容会自动合并。自定义词库不受“内容长度”限制。</p><p id="custom-error" class="form-error" role="alert"></p><button type="submit" class="primary-button dialog-primary">保存并使用词库</button></form></dialog>
+  <dialog id="tracking-guide-dialog" aria-labelledby="tracking-guide-title">
+    <div class="dialog-heading"><h2 id="tracking-guide-title">先跟稳，再加一点难度。</h2><button type="button" class="icon-button close-dialog" aria-label="关闭追踪指南">×</button></div>
+    <p class="dialog-lead">这是用目光跟随移动目标的自主练习。不需要触摸圆点，也不会调用摄像头。</p>
+    <ol class="guide-steps">
+      <li><strong>看住圆点，平稳跟随</strong><p>保持舒适坐姿和观看距离，自然眨眼，不用憋着不眨眼。开始前有倒计时，圆点会慢慢起步。</p></li>
+      <li><strong>先从容易的路线开始</strong><p>水平或垂直往返 → 椭圆环绕 → 8 字 → 自由曲线。先用慢速和较大圆点，觉得轻松时只改变一个参数。</p></li>
+      <li><strong>跟丢时，停下来重新找到</strong><p>点「跟丢了」会停住目标并记录一次自报。看清圆点后，可先减速，再点「重新跟上」。</p></li>
+      <li><strong>把练习感受留下来</strong><p>两种模式有各自的本机记录。这里只记录播放时长、你主动报告的跟丢次数与自评，不会把“没有点击跟丢”认定为始终跟上。</p></li>
+    </ol>
+    <div class="guide-details"><p><strong>操作</strong>　空格休息 / 继续，↑↓ 调速，L 报告跟丢，F 专注，Esc 休息并退出专注。切换模式、切到后台或画面明显卡顿时会暂停。手机旋转或改变练习区域大小时，也会先暂停重新定位。</p><p><strong>练习边界</strong>　不保证练出持续追踪能力，也不用于治疗视力问题。出现眼酸、头晕、复视等不适时停止；有持续不适或已知眼部问题时，向眼科专业人员咨询。<a href="https://www.aapos.org/glossary/vision-therapy" target="_blank" rel="noopener noreferrer">阅读 AAPOS 关于视觉训练的说明</a>。</p></div>
+    <button type="button" class="primary-button close-dialog dialog-primary">明白了，按自己的节奏练</button>
+  </dialog>
+  <dialog id="tracking-history-dialog" aria-labelledby="tracking-history-title">
+    <div class="dialog-heading"><h2 id="tracking-history-title">留下每一次跟随。</h2><button type="button" class="icon-button close-dialog" aria-label="关闭追踪记录">×</button></div>
+    <p class="dialog-lead">追踪模式最近 100 轮记录，仅保存在当前浏览器。跟丢次数来自主动报告。</p>
+    <div id="tracking-history-summary" class="history-summary"></div><div id="tracking-history-list"></div>
+    <div class="dialog-actions"><button type="button" class="text-button" id="tracking-clear-history">清空追踪记录</button><button type="button" class="text-button" id="tracking-cancel-clear" hidden>取消</button><span id="tracking-clear-hint" class="field-note"></span></div>
+  </dialog>
   <div class="toast" id="toast" role="status" hidden></div>
   <noscript><p class="no-script">请启用 JavaScript 后使用训练功能。页面不会上传你的训练记录。</p></noscript>
 </body>
