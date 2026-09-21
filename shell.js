@@ -1,5 +1,5 @@
 import { suspendReading, refreshReading } from './app.js?v=2';
-import { initTracking } from './tracking.js?v=2';
+import { initTracking } from './tracking.js?v=3';
 import { readData, writeData } from './storage.js';
 
 let storage;

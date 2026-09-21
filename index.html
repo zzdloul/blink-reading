@@ -8,8 +8,8 @@
   <title>瞬读 blink · 找到你的默念节奏</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./tracking.css?v=2">
-  <script type="module" src="./shell.js?v=2"></script>
+  <link rel="stylesheet" href="./tracking.css?v=3">
+  <script type="module" src="./shell.js?v=3"></script>
 </head>
 <body>
   <a class="skip-link" href="#trainer">跳到训练区</a>
@@ -98,7 +98,8 @@
           <aside class="settings tracking-settings" aria-labelledby="tracking-settings-title">
             <h2 id="tracking-settings-title">从平稳跟随开始</h2>
             <fieldset class="setting-group tracking-route-group"><legend>运动路线</legend><div class="route-choices">
-              <button type="button" data-path="horizontal" aria-pressed="true"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M4 12h40"/></svg><span>水平往返</span></button>
+              <button type="button" data-path="random" aria-pressed="true"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M3 18C11 18 5 3 16 5S24 23 31 15S35 3 44 8M40 3l4 5-6 2"/></svg><span>随机追踪</span></button>
+              <button type="button" data-path="horizontal" aria-pressed="false"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M4 12h40"/></svg><span>水平往返</span></button>
               <button type="button" data-path="vertical" aria-pressed="false"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M24 3v18"/></svg><span>垂直往返</span></button>
               <button type="button" data-path="oval" aria-pressed="false"><svg viewBox="0 0 48 24" aria-hidden="true"><ellipse cx="24" cy="12" rx="18" ry="8"/></svg><span>椭圆环绕</span></button>
               <button type="button" data-path="eight" aria-pressed="false"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M24 12C0-14 0 38 24 12S48 38 24 12"/></svg><span>8 字环绕</span></button>
@@ -108,10 +109,10 @@
             <div class="setting-group font-group"><div class="setting-label"><label for="tracking-size">圆点大小</label><div class="pixel-input"><input type="number" id="tracking-size-number" aria-label="圆点大小像素" min="6" max="64" value="24"><span>px</span></div></div><input id="tracking-size" type="range" min="6" max="64" value="24"><div class="range-scale"><span>6 px</span><span>64 px</span></div></div>
             <fieldset class="setting-group"><legend>活动范围</legend><div class="segmented"><button type="button" data-tracking-range="0.45" aria-pressed="false">小范围</button><button type="button" data-tracking-range="0.7" aria-pressed="true">适中</button><button type="button" data-tracking-range="0.9" aria-pressed="false">大范围</button></div></fieldset>
             <fieldset class="setting-group" id="tracking-duration-field"><legend>每轮时长</legend><div class="segmented"><button type="button" data-tracking-duration="0" aria-pressed="true">不限时</button><button type="button" data-tracking-duration="60" aria-pressed="false">1分钟</button><button type="button" data-tracking-duration="120" aria-pressed="false">2分钟</button><button type="button" data-tracking-duration="300" aria-pressed="false">5分钟</button></div></fieldset>
-            <div class="tracking-guide-setting"><label class="check-row"><input type="checkbox" id="tracking-guide" checked>显示轨迹引导线</label><p class="field-note">熟悉路线后可以隐藏引导线。改路线或范围会先暂停，重新看住圆点再继续。</p></div>
+            <div class="tracking-guide-setting"><label class="check-row"><input type="checkbox" id="tracking-guide" checked>显示轨迹引导线</label><p class="field-note" id="tracking-route-note">随机路线会持续生成，不循环、不预告下一段。速度始终由你控制。</p></div>
           </aside>
         </div>
-        <div class="practice-tip tracking-tip"><strong>循序练习</strong><p>先慢速水平往返，再试椭圆、8 字和自由曲线。跟不上就点「跟丢了」，减速后继续。</p></div>
+        <div class="practice-tip tracking-tip"><strong>跟住这一刻</strong><p>随机追踪每次都会走出不同路线。用「减速 / 提速」找到自己的节奏，跟丢就停下来重新找到。</p></div>
         <p class="tracking-disclaimer">本工具不检测眼动；时长与自报次数不代表追踪准确率。感到眼酸、头晕或不舒服时，请停止并休息。</p>
       </section>
     </main>
@@ -149,7 +150,7 @@
     <p class="dialog-lead">这是用目光跟随移动目标的自主练习。不需要触摸圆点，也不会调用摄像头。</p>
     <ol class="guide-steps">
       <li><strong>看住圆点，平稳跟随</strong><p>保持舒适坐姿和观看距离，自然眨眼，不用憋着不眨眼。开始前有倒计时，圆点会慢慢起步。</p></li>
-      <li><strong>先从容易的路线开始</strong><p>水平或垂直往返 → 椭圆环绕 → 8 字 → 自由曲线。先用慢速和较大圆点，觉得轻松时只改变一个参数。</p></li>
+      <li><strong>选择随机或固定路线</strong><p>随机追踪不断生成新的弯曲和方向，不提前显示未来轨迹。固定路线适合先熟悉跟随。速度可随时手动调节，开始时可以慢一些。</p></li>
       <li><strong>跟丢时，停下来重新找到</strong><p>点「跟丢了」会停住目标并记录一次自报。看清圆点后，可先减速，再点「重新跟上」。</p></li>
       <li><strong>把练习感受留下来</strong><p>两种模式有各自的本机记录。这里只记录播放时长、你主动报告的跟丢次数与自评，不会把“没有点击跟丢”认定为始终跟上。</p></li>
     </ol>

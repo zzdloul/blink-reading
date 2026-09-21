@@ -1,4 +1,4 @@
-import { TRACKS, TRACKING_DEFAULTS, sanitizeTrackingSettings, sanitizeTrackingHistory, createTrajectory, TrackingSession } from './tracking-engine.js?v=2';
+import { TRACKS, TRACKING_DEFAULTS, sanitizeTrackingSettings, sanitizeTrackingHistory, createTrajectory, TrackingSession } from './tracking-engine.js?v=3';
 import { readData, writeData } from './storage.js';
 
 export function initTracking(storage) {
@@ -35,8 +35,10 @@ export function initTracking(storage) {
     $('tracking-speed').setAttribute('aria-valuetext', `${settings.speed.toFixed(1)} 倍`);
     $('tracking-size-number').value = settings.size;
     $('tracking-focus-size-value').textContent = `${settings.size} px`;
-    $('tracking-guide').checked = settings.guide;
-    $('tracking-route').toggleAttribute('hidden', !settings.guide);
+    $('tracking-guide').checked = settings.guide && settings.path !== 'random';
+    $('tracking-guide').disabled = settings.path === 'random';
+    $('tracking-route').toggleAttribute('hidden', !settings.guide || settings.path === 'random');
+    $('tracking-route-note').textContent = settings.path === 'random' ? '随机路线会持续生成，不循环、不预告下一段。速度始终由你控制。' : '熟悉路线后可以隐藏引导线。改路线或范围会先暂停，重新看住圆点再继续。';
     for (const button of document.querySelectorAll('[data-path]')) button.setAttribute('aria-pressed', String(button.dataset.path === settings.path));
     for (const key of ['range', 'duration']) {
       for (const button of document.querySelectorAll(`[data-tracking-${key}]`)) {
@@ -116,7 +118,9 @@ export function initTracking(storage) {
     if (status === 'paused') announce($('tracking-hint').textContent);
   }
   function start() {
-    measure({ intentional: true });
+    session = null; savedRecord = null;
+    render(true);
+    measure({ reset: settings.path === 'random', intentional: true });
     session = new TrackingSession(settings, trajectory);
     session.start(performance.now());
     savedRecord = null;

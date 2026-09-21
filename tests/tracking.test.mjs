@@ -12,19 +12,22 @@ function advance(s, duration, step = 20) {
   while (s.lastTime < end && ['countdown','running'].includes(s.status)) s.tick(Math.min(end, s.lastTime + step));
 }
 const distance = (a,b) => Math.hypot(a.x-b.x, a.y-b.y);
+function seeded(seed) {
+  return () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
+}
 
 test('tracking defaults preserve manual unlimited practice and clamp saved input', () => {
   assert.equal(TRACKING_DEFAULTS.duration,0);
   assert.deepEqual(sanitizeTrackingSettings(null),TRACKING_DEFAULTS);
   const settings=sanitizeTrackingSettings({path:'__proto__',speed:Infinity,size:1,range:9,guide:false,duration:60});
-  assert.equal(settings.path,'horizontal'); assert.equal(settings.speed,0.7);
+  assert.equal(settings.path,'random'); assert.equal(settings.speed,0.7);
   assert.equal(settings.size,6); assert.equal(settings.range,0.7); assert.equal(settings.guide,false); assert.equal(settings.duration,60);
 });
 test('every trajectory remains inside target-safe bounds on phone and desktop', () => {
   for (const path of Object.keys(TRACKS)) for (const [width,height] of [[240,160],[320,450],[900,420]]) {
     const route=createTrajectory(path,width,height,0.9);
     for(let i=0;i<=2000;i++) {
-      const p=route.at(i/2000*route.length);
+      const p=route.at(route.dynamic ? i * 10 : i/2000*route.length);
       assert.ok(p.x>=32&&p.x<=width-32,`${path}: x ${p.x}`);
       assert.ok(p.y>=32&&p.y<=height-32,`${path}: y ${p.y}`);
     }
@@ -33,6 +36,7 @@ test('every trajectory remains inside target-safe bounds on phone and desktop', 
 test('closed paths join without jumps and adjacent frame positions remain close', () => {
   for (const path of Object.keys(TRACKS)) {
     const route=createTrajectory(path,400,300);
+    if (route.dynamic) continue;
     assert.ok(distance(route.at(0),route.at(route.length))<1e-8);
     assert.ok(distance(route.at(route.length-0.001),route.at(0.001))<0.003);
     for(let i=0;i<1000;i++) {
@@ -95,4 +99,44 @@ test('tracking history validates input and limits size without touching reading 
   assert.deepEqual(sanitizeTrackingHistory([null,{...record,paths:['bad']},record]),[record]);
   assert.equal(sanitizeTrackingHistory(Array(150).fill(record)).length,100);
   assert.deepEqual(sanitizeTrackingHistory({}),[]);
+});
+
+test('random paths keep generating new bounded, continuous movement without a loop', () => {
+  const route = createTrajectory('random', 320, 220, 0.9, seeded(42));
+  assert.equal(route.length, Infinity);
+  assert.deepEqual(route.samples, []); // No future route is revealed to the UI.
+  let previous = route.at(0);
+  const positions = [];
+  for (let i = 1; i <= 15000; i++) {
+    const point = route.at(i * 1.5);
+    assert.ok(distance(previous, point) <= 1.501, 'segment join must not teleport');
+    assert.ok(point.x >= 32 && point.x <= 288 && point.y >= 32 && point.y <= 188);
+    assert.deepEqual(route.at(i * 1.5), point, 'drawing twice must not move the target');
+    if (i % 100 === 0) positions.push(`${point.x.toFixed(3)},${point.y.toFixed(3)}`);
+    previous = point;
+  }
+  assert.equal(new Set(positions).size, positions.length);
+});
+
+test('separate random runs differ and manual speed changes retain the current position', () => {
+  const one = createTrajectory('random',320,300,0.7,seeded(7));
+  const two = createTrajectory('random',320,300,0.7,seeded(19));
+  assert.ok(distance(one.at(100),two.at(100)) > 1);
+  const s = session({path:'random'}); advance(s,8000);
+  const position = s.position, speed = s.effectiveSpeed;
+  s.setSpeed(2.5); assert.deepEqual(s.position,position);
+  advance(s,20); assert.ok(distance(s.position,position)<5);
+  assert.ok(s.effectiveSpeed > speed && s.effectiveSpeed < 2.5);
+  s.pause(s.lastTime); const paused = s.position;
+  s.resume(s.lastTime); advance(s,1200); assert.deepEqual(s.position,paused);
+});
+
+test('random resize and changing between random and fixed paths remain finite', () => {
+  const s = session({path:'random'}); advance(s,6000); s.pause(s.lastTime);
+  s.setTrajectory(createTrajectory('random',450,300));
+  assert.equal(s.distance,0); assert.ok(Number.isFinite(s.position.x));
+  s.setTrajectory(createTrajectory('oval',450,300));
+  assert.equal(s.distance,0); assert.ok(Number.isFinite(s.position.y));
+  s.setTrajectory(createTrajectory('random',320,220),true);
+  assert.deepEqual(s.position,{x:160,y:110});
 });

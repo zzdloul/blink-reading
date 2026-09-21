@@ -15,7 +15,6 @@
 .tracking-losses b { font-weight: 500; }
 .route-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .route-choices button { display: flex; align-items: center; justify-content: flex-start; gap: 10px; min-height: 48px; border: 1px solid var(--line); border-radius: 9px; background: transparent; font-size: 14px; padding: 9px 12px; white-space: nowrap; }
-.route-choices button:last-child { grid-column: 1 / -1; }
 .route-choices button svg { width: 35px; height: 22px; fill: none; stroke: #82947a; stroke-width: 1.6; stroke-linecap: round; }
 .route-choices button[aria-pressed="true"] { background: #def3c2; border-color: #91d84d; color: var(--green); font-weight: 650; }
 .route-choices button[aria-pressed="true"] svg { stroke: var(--green); }
@@ -57,7 +56,6 @@ body.tracking-focus .tracking-result { max-width: 700px; }
   .mode-nav a { flex: 1; min-height: 42px; }
   .tracking-settings .tracking-route-group { grid-column: 1 / -1; }
   .route-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .route-choices button:last-child { grid-column: auto; }
   .tracking-guide-setting { grid-column: 1 / -1; }
   .tracking-settings .font-group { grid-column: auto; }
 }
@@ -74,7 +72,6 @@ body.tracking-focus .tracking-result { max-width: 700px; }
   .tracking-settings h2 { font-size: 22px; }
   .route-choices { grid-template-columns: 1fr 1fr; }
   .route-choices button { justify-content: center; font-size: 13px; }
-  .route-choices button:last-child { grid-column: 1 / -1; }
   .route-choices button svg { width: 34px; }
   .tracking-transport { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
   .tracking-transport .primary-button { grid-column: span 2; width: 100%; max-width: none; font-size: 16px; padding: 10px; min-height: 50px; }
