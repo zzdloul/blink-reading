@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f8f6">
+  <meta name="description" content="瞬读：数字、中文、英文快速闪现，在心里默念，按自己的节奏练习。免费，无需登录。">
+  <title>瞬读 blink · 找到你的默念节奏</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#trainer">跳到训练区</a>
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="瞬读首页">
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11 3H6a3 3 0 0 0-3 3v5M21 3h5a3 3 0 0 1 3 3v5M29 21v5a3 3 0 0 1-3 3h-5M11 29H6a3 3 0 0 1-3-3v-5" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/></svg>
+        <strong>瞬读</strong><span>blink</span>
+      </a>
+      <nav aria-label="主要导航"><button type="button" id="history-open">训练记录</button><button type="button" id="guide-open">使用指南</button></nav>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="page-title"><h1 id="page-title">跟上眼前这一瞬。</h1><p>让目光专注，让默念跟上自己的节奏。</p></section>
+      <div class="workspace">
+        <section class="trainer" id="trainer" aria-label="默念训练" tabindex="-1">
+          <div class="stage-frame">
+            <div class="stage-heading"><h2>自由默念</h2><span class="status"><i id="status-dot"></i><span id="status-text">准备好了</span></span><button type="button" id="focus-exit" class="text-button" hidden>退出专注</button></div>
+            <div class="stage" id="stage">
+              <div class="stimulus-area" id="stimulus-area">
+                <div class="focus-brackets" aria-hidden="true"></div>
+                <div class="stimulus" id="stimulus" aria-live="off">2048</div>
+                <p class="stage-hint" id="stage-hint">目光停在中心，在心里轻轻读出。</p>
+              </div>
+              <div class="result" id="result" hidden>
+                <p class="result-overline" id="result-label">本轮结束</p>
+                <h3>给专注，留一点回响。</h3>
+                <div class="result-metrics"><div><strong id="result-time">0:00</strong><span>实际练习</span></div><div><strong id="result-count">0</strong><span>已呈现内容</span></div></div>
+                <p id="result-message">刚才的节奏，你跟上了吗？</p>
+                <div class="feeling-buttons" aria-label="本轮自我感受"><button type="button" data-feeling="easy">轻松跟上</button><button type="button" data-feeling="okay">刚刚好</button><button type="button" data-feeling="hard">有点吃力</button></div>
+                <p class="result-advice" id="result-advice">选一个感受，帮下一轮找到更合适的节奏。</p>
+                <button type="button" class="text-button" id="apply-suggestion" hidden>采用建议节奏</button>
+              </div>
+              <div class="stage-bottom"><span id="stage-category">数字 · 中文 · 英文</span><span class="presented" id="presented" hidden>已呈现 <b id="presented-count">0</b> 个</span><button type="button" class="icon-button" id="focus-toggle" aria-label="进入专注模式" aria-pressed="false" title="专注模式（F）"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+            </div>
+          </div>
+          <div class="focus-font-tools" id="focus-font-tools" hidden><label for="focus-font-size">文字大小</label><input type="range" id="focus-font-size" min="6" max="200" step="1" value="132"><output id="focus-font-value" for="focus-font-size">132 px</output></div>
+          <div class="progress-row"><progress id="session-progress" max="120000" value="0" aria-label="本轮训练进度"></progress><span><time id="elapsed">00:00</time><span class="time-slash"> / </span><span id="duration-label">不限时</span></span></div>
+          <div class="transport"><button type="button" class="primary-button" id="play">开始训练</button><button type="button" class="secondary-button" id="slower" title="同时增加 50 毫秒闪现和间隔（↓）">减速</button><button type="button" class="secondary-button" id="faster" title="同时减少 50 毫秒闪现和间隔（↑）">提速</button><button type="button" class="text-button stop-button" id="stop" hidden>结束本轮</button><span class="keyboard-tip" id="keyboard-tip"><kbd>空格</kbd> 休息 / 继续</span></div>
+          <p class="sr-only" id="announcement" aria-live="polite"></p>
+        </section>
+        <aside class="settings" aria-labelledby="settings-heading">
+          <h2 id="settings-heading">找到你的节奏</h2>
+          <fieldset id="category-field" class="setting-group"><legend>内容</legend><div class="segmented" id="categories"><button type="button" data-category="mixed" aria-pressed="true">混合</button><button type="button" data-category="numbers" aria-pressed="false">数字</button><button type="button" data-category="chinese" aria-pressed="false">中文</button><button type="button" data-category="english" aria-pressed="false">英文</button></div><p id="custom-active" class="field-note" hidden>正在使用自定义词库</p></fieldset>
+          <div class="setting-group timing-group"><div class="setting-label"><label for="exposure">闪现时间</label><output for="exposure" id="exposure-value">600 <small>ms</small></output></div><input id="exposure" type="range" min="100" max="2000" step="50" value="600"><div class="range-scale"><span>100</span><span>2000</span></div></div>
+          <div class="setting-group timing-group"><div class="setting-label"><label for="gap">默念间隔</label><output for="gap" id="gap-value">400 <small>ms</small></output></div><input id="gap" type="range" min="100" max="2000" step="50" value="400"><div class="range-scale"><span>100</span><span>2000</span></div></div>
+          <div class="setting-group font-group"><div class="setting-label"><label for="font-size">文字大小</label><div class="pixel-input"><input type="number" id="font-size-number" aria-label="文字大小像素" min="6" max="200" step="1" value="132"><span>px</span></div></div><input id="font-size" type="range" min="6" max="200" step="1" value="132"><div class="range-scale"><span>6 px · 很小</span><span>200 px</span></div></div>
+          <div class="settings-divider"></div>
+          <fieldset id="difficulty-field" class="setting-group"><legend>内容长度</legend><div class="segmented"><button type="button" data-difficulty="easy" aria-pressed="false">轻松</button><button type="button" data-difficulty="standard" aria-pressed="true">标准</button><button type="button" data-difficulty="challenge" aria-pressed="false">挑战</button></div></fieldset>
+          <fieldset id="duration-field" class="setting-group"><legend>每轮时长</legend><div class="segmented"><button type="button" data-duration="0" aria-pressed="true">不限时</button><button type="button" data-duration="60" aria-pressed="false">1分钟</button><button type="button" data-duration="120" aria-pressed="false">2分钟</button><button type="button" data-duration="300" aria-pressed="false">5分钟</button></div></fieldset>
+          <details class="more-settings"><summary>更多设置<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 7 5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="more-content"><button type="button" class="secondary-button" id="custom-open">自定义词库</button><p class="field-note" id="pace-note">每分钟约 60 个内容</p><p class="field-note">标准：4位数字 / 2字中文 / 5–7字母英文。默认一直练到你点休息。训练中可以调速度和文字大小。</p></div></details>
+        </aside>
+      </div>
+      <div class="practice-tip"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18h6m-5 3h4M8.5 15c0-2-3-3-3-6a6.5 6.5 0 0 1 13 0c0 3-3 4-3 6v1h-7v-1Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>练习小提示</strong><p>先读清，再提速。连续跟不上时，慢一点也很好。</p></div>
+    </main>
+    <footer>只和上一次的自己比较。</footer>
+  </div>
+
+  <dialog id="guide-dialog" aria-labelledby="guide-title">
+    <div class="dialog-heading"><h2 id="guide-title">先读清，再提速。</h2><button type="button" class="icon-button close-dialog" aria-label="关闭使用指南">×</button></div>
+    <div class="guide-body">
+      <p class="dialog-lead">眼睛看见，在心里轻轻读出。不用出声，也不用抢答。</p>
+      <ol class="guide-steps">
+        <li><strong>从舒服的节奏开始</strong><p>先试 600 ms 闪现 + 400 ms 间隔。默认不限时，一直练到你点「休息一下」。休息后可以继续，也可以结束本轮。</p></li>
+        <li><strong>让留白成为默念的时间</strong><p>“闪现时间”是文字在屏幕上停留的时间；“默念间隔”是文字消失后的空白时间，两者共同决定节奏。</p></li>
+        <li><strong>把文字调到适合你的大小</strong><p>字号可在 6–200 px 之间调节，也可以直接输入数字。正在训练时立即生效。长内容超出屏幕时会自动缩小。</p></li>
+        <li><strong>跟得上，再小幅提速</strong><p>连续一小段都能读清时，点一次“提速”；常常来不及，就减速或缩短内容。每次提速会各减少 50 ms。</p></li>
+        <li><strong>在结束后回想一下</strong><p>试着回想最后几个内容，再记录“轻松 / 刚好 / 吃力”。不追求只刷数量；累了就休息。</p></li>
+      </ol>
+      <div class="guide-details">
+        <p><strong>混合与长度</strong>　混合模式轮流打乱数字、中文和英文。轻松：2位数字、2字常用词、2–4字母；标准：4位、2字、5–7字母；挑战：6位、4字、8字母以上。</p>
+        <p><strong>手机使用</strong>　点击训练框右下角进入专注模式。可用手机浏览器的分享或菜单功能将网页添加到主屏幕；训练记录保存在该浏览器。</p>
+        <p><strong>键盘</strong>　空格休息 / 继续，↑ 提速，↓ 减速，F 进入 / 退出专注，Esc 休息并退出专注。</p>
+        <p><strong>自动休息</strong>　切到其他页面或锁屏时自动休息，回来后手动继续。</p>
+        <p><strong>关于记录</strong>　时长、已呈现数量和自评只存在当前浏览器，不会上传；不同设备不会同步。呈现数量不代表正确率或记忆能力提升。本工具无法判断你是否完成了默念。</p>
+        <p><strong>小提示</strong>　实际显示精度受屏幕刷新率和设备性能影响。保持舒适的屏幕亮度，不适时停止。</p>
+      </div>
+    </div>
+    <button type="button" class="primary-button close-dialog dialog-primary">明白了，开始练习</button>
+  </dialog>
+
+  <dialog id="history-dialog" aria-labelledby="history-title"><div class="dialog-heading"><h2 id="history-title">每一次专注，都有迹可循。</h2><button type="button" class="icon-button close-dialog" aria-label="关闭训练记录">×</button></div><p class="dialog-lead">最近 100 轮记录，仅保存在当前浏览器。</p><div id="history-summary" class="history-summary"></div><div id="history-list"></div><div class="dialog-actions"><button type="button" class="text-button" id="clear-history">清空记录</button><button type="button" class="text-button" id="cancel-clear" hidden>取消</button><span id="clear-hint" class="field-note"></span></div></dialog>
+
+  <dialog id="custom-dialog" aria-labelledby="custom-title"><form id="custom-form"><div class="dialog-heading"><h2 id="custom-title">练你想记住的词。</h2><button type="button" class="icon-button close-dialog" aria-label="关闭自定义词库">×</button></div><label for="custom-text" class="dialog-lead">每行一个词，也可以用逗号分开。数字、中文和英文都可以。</label><textarea id="custom-text" rows="9" maxlength="15000" spellcheck="false" placeholder="专注&#10;rhythm&#10;2048&#10;清风" aria-describedby="custom-error custom-help"></textarea><p id="custom-help" class="field-note">2–500 个不同内容，每个最多 24 个字。重复内容会自动合并。自定义词库不受“内容长度”限制。</p><p id="custom-error" class="form-error" role="alert"></p><button type="submit" class="primary-button dialog-primary">保存并使用词库</button></form></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <noscript><p class="no-script">请启用 JavaScript 后使用训练功能。页面不会上传你的训练记录。</p></noscript>
+</body>
+</html>
