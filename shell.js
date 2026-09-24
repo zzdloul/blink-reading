@@ -1,4 +1,4 @@
-import { suspendReading, refreshReading } from './app.js?v=2';
+import { suspendReading, refreshReading } from './app.js?v=4';
 import { initTracking } from './tracking.js?v=3';
 import { readData, writeData } from './storage.js';
 

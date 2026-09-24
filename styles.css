@@ -11,3 +11,8 @@ body.focus-mode{overflow:hidden}body.focus-mode .trainer{position:fixed;inset:0;
 .intro h1{line-height:1.25}.intro p{line-height:1.5}.focus-brackets{background:linear-gradient(#92d657,#92d657) left top/15px 1.5px no-repeat,linear-gradient(#92d657,#92d657) left top/1.5px 15px no-repeat,linear-gradient(#92d657,#92d657) right top/15px 1.5px no-repeat,linear-gradient(#92d657,#92d657) right top/1.5px 15px no-repeat,linear-gradient(#92d657,#92d657) left bottom/15px 1.5px no-repeat,linear-gradient(#92d657,#92d657) left bottom/1.5px 15px no-repeat,linear-gradient(#92d657,#92d657) right bottom/15px 1.5px no-repeat,linear-gradient(#92d657,#92d657) right bottom/1.5px 15px no-repeat}
 @media(max-width:820px){.font-group{grid-column:1/-1}.font-group .setting-label{flex-wrap:nowrap}.font-group input[type=range]{max-width:100%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+
+/* Reserve the footer controls while using the full remaining area for each item. */
+#trainer .stimulus-area{position:absolute;inset:12px 12px 64px;width:auto;min-height:0;padding:0;transform:none;display:block}
+#trainer .stimulus{position:absolute;left:var(--stimulus-x,50%);top:var(--stimulus-y,50%);width:max-content;max-width:none;transform:translate(-50%,-50%);transition:none}
+#trainer .stage-hint{position:absolute;bottom:8px;left:0;right:0;margin:0;min-height:0;text-align:center}

@@ -7,9 +7,9 @@
   <meta name="description" content="瞬读：自由默念与视线追踪两种练习，手机可用，自主调节速度与大小。免费，无需登录。">
   <title>瞬读 blink · 找到你的默念节奏</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=4">
   <link rel="stylesheet" href="./tracking.css?v=3">
-  <script type="module" src="./shell.js?v=3"></script>
+  <script type="module" src="./shell.js?v=4"></script>
 </head>
 <body>
   <a class="skip-link" href="#trainer">跳到训练区</a>
@@ -31,9 +31,8 @@
             <div class="stage-heading"><h2>自由默念</h2><span class="status"><i id="status-dot"></i><span id="status-text">准备好了</span></span><button type="button" id="focus-exit" class="text-button" hidden>退出专注</button></div>
             <div class="stage" id="stage">
               <div class="stimulus-area" id="stimulus-area">
-                <div class="focus-brackets" aria-hidden="true"></div>
                 <div class="stimulus" id="stimulus" aria-live="off">2048</div>
-                <p class="stage-hint" id="stage-hint">目光停在中心，在心里轻轻读出。</p>
+                <p class="stage-hint" id="stage-hint">内容会随机出现在不同位置，在心里轻轻读出。</p>
               </div>
               <div class="result" id="result" hidden>
                 <p class="result-overline" id="result-label">本轮结束</p>
@@ -125,6 +124,7 @@
       <p class="dialog-lead">眼睛看见，在心里轻轻读出。不用出声，也不用抢答。</p>
       <ol class="guide-steps">
         <li><strong>从舒服的节奏开始</strong><p>先试 600 ms 闪现 + 400 ms 间隔。默认不限时，一直练到你点「休息一下」。休息后可以继续，也可以结束本轮。</p></li>
+        <li><strong>留意不同位置</strong><p>每个新内容会随机出现在训练区域内，显示期间保持不动。文字会避开边缘与底部按钮，休息后继续显示同一内容时保留原来的位置。</p></li>
         <li><strong>让留白成为默念的时间</strong><p>“闪现时间”是文字在屏幕上停留的时间；“默念间隔”是文字消失后的空白时间，两者共同决定节奏。</p></li>
         <li><strong>把文字调到适合你的大小</strong><p>字号可在 6–200 px 之间调节，也可以直接输入数字。正在训练时立即生效。长内容超出屏幕时会自动缩小。</p></li>
         <li><strong>跟得上，再小幅提速</strong><p>连续一小段都能读清时，点一次“提速”；常常来不及，就减速或缩短内容。每次提速会各减少 50 ms。</p></li>

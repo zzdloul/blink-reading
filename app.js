@@ -1,4 +1,4 @@
-import { DEFAULTS, Session, adjustSpeed } from './engine.js';
+import { DEFAULTS, Session, adjustSpeed } from './engine.js?v=4';
 import { createGenerator, LABELS, validateCustom, parseCustom } from './content.js';
 import { loadSettings, loadHistory, writeData } from './storage.js';
 
@@ -87,12 +87,28 @@ function setFont(value) {
   settings.fontSize = Math.max(6, Math.min(200, Math.round(Number(value))));
   saveSettings(); syncSettings();
 }
-function fitStimulus(text) {
-  // Preserve the requested size, reducing only when a long item would overflow.
-  const units = Array.from(text).reduce((sum, char) => sum + (/[^\x00-\x7F]/.test(char) ? 1 : .64), 0);
-  const width = $('stimulus-area').clientWidth - 30;
-  const max = Math.max(6, Math.floor(width / Math.max(1, units)));
-  $('stimulus').style.setProperty('--stimulus-size', `${Math.min(settings.fontSize, max)}px`);
+function layoutStimulus(randomized) {
+  const area = $('stimulus-area'), stimulus = $('stimulus');
+  if (!area.clientWidth || !area.clientHeight) return;
+  const special = stimulus.matches('.pause-text,.countdown');
+  if (special) stimulus.style.removeProperty('--stimulus-size');
+  else stimulus.style.setProperty('--stimulus-size', `${settings.fontSize}px`);
+  // Measure the actual glyphs, including wide custom words and the user's font.
+  const rect = stimulus.getBoundingClientRect();
+  const availableWidth = Math.max(6, area.clientWidth - 24);
+  const availableHeight = Math.max(6, area.clientHeight - (randomized ? 24 : 64));
+  const scale = Math.min(1, availableWidth / rect.width, availableHeight / rect.height);
+  if (scale < 1 && !special) {
+    stimulus.style.setProperty('--stimulus-size', `${Math.max(6, Math.floor(settings.fontSize * scale))}px`);
+  }
+  const fitted = stimulus.getBoundingClientRect();
+  const anchor = randomized ? session.anchor : { x: 0.5, y: 0.5 };
+  const travelX = Math.max(0, area.clientWidth - 24 - fitted.width);
+  const travelY = Math.max(0, area.clientHeight - 24 - fitted.height);
+  const x = (area.clientWidth - travelX) / 2 + anchor.x * travelX;
+  const y = (area.clientHeight - travelY) / 2 + anchor.y * travelY;
+  stimulus.style.setProperty('--stimulus-x', `${x}px`);
+  stimulus.style.setProperty('--stimulus-y', `${y}px`);
 }
 function preview() {
   if (settings.category === 'custom') return parseCustom(settings.custom)[0] || '专注';
@@ -101,6 +117,7 @@ function preview() {
   return settings.difficulty === 'easy' ? '28' : settings.difficulty === 'challenge' ? '204816' : '2048';
 }
 function render(force = false) {
+  if ($('reading-panel').hidden) return;
   const status = session?.status || 'ready';
   const seconds = Math.floor((session?.elapsed || 0) / 1000);
   const snapshot = [status, session?.phase, session?.item?.text, session?.count, seconds, Math.ceil((session?.countdown || 0) / 1000)].join('|');
@@ -122,11 +139,11 @@ function render(force = false) {
   if (completed && !session.count) $('status-text').textContent = '本轮已结束';
   $('stimulus').className = 'stimulus';
   let text = preview();
-  let hint = '目光停在中心，在心里轻轻读出。';
+  let hint = '内容会随机出现在不同位置，在心里轻轻读出。';
   if (status === 'countdown') {
     text = String(Math.max(1, Math.ceil(session.countdown / 1000)));
     $('stimulus').classList.add('countdown');
-    hint = '放松呼吸，目光停在中心。';
+    hint = '准备好，留意训练区域内的随机位置。';
   } else if (status === 'running') {
     text = session.item.text;
     if (session.phase === 'gap') $('stimulus').classList.add('blank');
@@ -140,8 +157,7 @@ function render(force = false) {
   $('stimulus').textContent = text;
   $('stimulus').lang = /^[a-z\s]+$/i.test(text) ? 'en' : 'zh-CN';
   $('stage-hint').textContent = hint;
-  if (status === 'paused' || status === 'countdown') $('stimulus').style.removeProperty('--stimulus-size');
-  else fitStimulus(text);
+  layoutStimulus(status === 'running');
   lockSettings();
   if (completed && !savedSession) saveResult();
 }
@@ -309,6 +325,7 @@ document.addEventListener('keydown', event => {
 document.addEventListener('visibilitychange', () => { if (document.hidden) pause('页面离开时已自动休息，回来后点继续即可。'); });
 window.addEventListener('pagehide', () => pause());
 window.addEventListener('resize', () => render(true));
+new ResizeObserver(() => render(true)).observe($('stimulus-area'));
 const loop = now => { if (active()) { session.tick(now); render(); } requestAnimationFrame(loop); };
 syncSettings();
 requestAnimationFrame(loop);

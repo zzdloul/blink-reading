@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DEFAULTS, sanitizeSettings, adjustSpeed, Session } from '../engine.js';
+import { DEFAULTS, sanitizeSettings, adjustSpeed, Session, randomAnchor } from '../engine.js';
 import { createGenerator, validateCustom, parseCustom } from '../content.js';
 import { loadSettings, loadHistory, writeData } from '../storage.js';
 
@@ -99,4 +99,28 @@ test('storage failures and corrupted persisted data do not prevent use', () => {
   assert.equal(writeData(blocked,'history',[]),false);
   assert.deepEqual(loadHistory({getItem:()=>'{bad json'}),[]);
   assert.deepEqual(loadHistory({getItem:()=>JSON.stringify([null,{at:'bad'}])}),[]);
+});
+
+test('reading anchors cover all corners and do not stay in the same location', () => {
+  for (const [x,y] of [[0,0],[0,1],[1,0],[1,1]]) {
+    const values=[x,y];
+    assert.deepEqual(randomAnchor(null,()=>values.shift()),{x,y});
+  }
+  let previous={x:0,y:0};
+  for(let i=0;i<40;i++) {
+    const point=randomAnchor(previous,()=>0);
+    assert.ok(point.x>=0&&point.x<=1&&point.y>=0&&point.y<=1);
+    assert.ok(Math.hypot(point.x-previous.x,point.y-previous.y)>=0.3);
+    previous=point;
+  }
+});
+
+test('reading position changes only for a new item, not on rest, gap or speed changes', () => {
+  const s=new Session(DEFAULTS,()=>({text:'清风',category:'chinese'}),()=>0);
+  s.start(0); assert.equal(s.anchor,null); s.tick(2000);
+  const first=s.anchor; s.tick(2100); assert.deepEqual(s.anchor,first);
+  s.pause(2200); s.setTiming(1000,500); s.resume(3000);
+  assert.deepEqual(s.anchor,first); s.tick(3600);
+  assert.equal(s.phase,'gap'); assert.deepEqual(s.anchor,first);
+  s.tick(4100); assert.equal(s.count,2); assert.notDeepEqual(s.anchor,first);
 });

@@ -24,12 +24,25 @@ export function adjustSpeed(settings, direction) {
     gap: Math.max(100, Math.min(2000, settings.gap + step)) };
 }
 
+// Store a relative anchor per item, so resizing and pausing never reroll it.
+export function randomAnchor(previous, random = Math.random) {
+  let point;
+  for (let i = 0; i < 8; i++) {
+    point = { x: random(), y: random() };
+    if (!previous || Math.hypot(point.x - previous.x, point.y - previous.y) >= 0.3) return point;
+  }
+  // Avoid repeatedly showing at the same place even with a constant random source.
+  return { x: previous.x < 0.5 ? 0.85 : 0.15, y: previous.y < 0.5 ? 0.85 : 0.15 };
+}
+
 // A monotonic, frame-driven clock. Hidden time and pauses never count as practice.
 // At most one phase transition per frame: a delayed frame never skips unseen items.
 export class Session {
-  constructor(settings, nextItem) {
+  constructor(settings, nextItem, random = Math.random) {
     this.settings = { ...settings };
     this.nextItem = nextItem;
+    this.random = random;
+    this.anchor = null;
     this.status = 'ready';
     this.phase = 'gap';
     this.item = null;
@@ -43,6 +56,7 @@ export class Session {
   start(now) { this.status = 'countdown'; this.lastTime = now; }
   showNext() {
     this.item = this.nextItem();
+    this.anchor = randomAnchor(this.anchor, this.random);
     this.count++;
     this.phase = 'show';
     this.phaseElapsed = 0;
