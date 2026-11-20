@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f7f8f6">
-  <meta name="description" content="瞬读：自由默念与视线追踪两种练习，手机可用，自主调节速度与大小。免费，无需登录。">
+  <meta name="theme-color" content="#f6f5ef">
+  <meta name="description" content="瞬读：自由默念、视线追踪与呼吸训练，自主调节练习节奏。">
   <title>瞬读 blink · 找到你的默念节奏</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css?v=4">
   <link rel="stylesheet" href="./tracking.css?v=3">
-  <script type="module" src="./shell.js?v=4"></script>
+  <link rel="stylesheet" href="./studio.css">
+  <script type="module" src="./shell.js?v=5"></script>
 </head>
 <body>
   <a class="skip-link" href="#trainer">跳到训练区</a>
@@ -19,7 +20,7 @@
         <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11 3H6a3 3 0 0 0-3 3v5M21 3h5a3 3 0 0 1 3 3v5M29 21v5a3 3 0 0 1-3 3h-5M11 29H6a3 3 0 0 1-3-3v-5" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/></svg>
         <strong>瞬读</strong><span>blink</span>
       </a>
-      <nav class="mode-nav" aria-label="训练模式"><a href="#reading" data-mode="reading" aria-current="page">瞬读默念</a><a href="#tracking" data-mode="tracking">视线追踪</a></nav>
+      <nav class="mode-nav" aria-label="训练模式"><a href="#reading" data-mode="reading" aria-current="page">瞬读默念</a><a href="#tracking" data-mode="tracking">视线追踪</a><a href="#breathing" data-mode="breathing">呼吸训练</a></nav>
       <nav class="utility-nav" aria-label="主要导航"><button type="button" id="history-open">训练记录</button><button type="button" id="guide-open">使用指南</button></nav>
     </header>
     <main>
@@ -114,6 +115,27 @@
         <div class="practice-tip tracking-tip"><strong>跟住这一刻</strong><p>随机追踪每次都会走出不同路线。用「减速 / 提速」找到自己的节奏，跟丢就停下来重新找到。</p></div>
         <p class="tracking-disclaimer">本工具不检测眼动；时长与自报次数不代表追踪准确率。感到眼酸、头晕或不舒服时，请停止并休息。</p>
       </section>
+      <section id="breathing-panel" aria-labelledby="breathing-title" hidden>
+        <div class="intro"><h1 id="breathing-title">跟着光环，慢慢呼吸。</h1><p>用鼻吸气，再轻补一口，最后用嘴慢慢呼出。</p></div>
+        <div class="workspace">
+          <section id="breather" class="breather" aria-label="呼吸引导" tabindex="-1">
+            <div class="breath-scene">
+              <div class="breath-stage-head"><h2>呼吸引导</h2><span id="breath-clock" aria-label="训练剩余时间">剩余 02:00</span></div>
+              <div class="breath-center">
+                <div class="breath-orb" id="breath-orb" aria-hidden="true"></div>
+                <div class="breath-cue"><strong id="breath-cue" aria-live="polite">准备呼吸</strong><span id="breath-seconds">跟随光环的起伏</span></div>
+              </div>
+            </div>
+            <div class="progress-row"><progress id="breath-progress" value="0" max="120" aria-label="呼吸训练进度"></progress><span id="breath-elapsed">00:00 / 02:00</span></div>
+            <div class="transport"><button class="primary-button" id="breath-play" type="button">开始呼吸</button><button class="secondary-button" id="breath-end" type="button" hidden>结束本轮</button></div>
+          </section>
+          <aside class="settings breath-settings" aria-labelledby="breath-settings-title">
+            <h2 id="breath-settings-title">呼吸节奏</h2>
+            <div id="breath-fields"></div>
+            <p class="field-note" id="breath-setting-note">按舒服的节奏调节，开始后跟随光环即可。</p>
+          </aside>
+        </div>
+      </section>
     </main>
     <footer>只和上一次的自己比较。</footer>
   </div>
@@ -162,6 +184,15 @@
     <p class="dialog-lead">追踪模式最近 100 轮记录，仅保存在当前浏览器。跟丢次数来自主动报告。</p>
     <div id="tracking-history-summary" class="history-summary"></div><div id="tracking-history-list"></div>
     <div class="dialog-actions"><button type="button" class="text-button" id="tracking-clear-history">清空追踪记录</button><button type="button" class="text-button" id="tracking-cancel-clear" hidden>取消</button><span id="tracking-clear-hint" class="field-note"></span></div>
+  </dialog>
+  <dialog id="breath-guide-dialog" aria-labelledby="breath-guide-title">
+    <div class="dialog-heading"><h2 id="breath-guide-title">跟随呼吸光环</h2><button type="button" class="icon-button close-dialog" aria-label="关闭呼吸指南">×</button></div>
+    <ol class="guide-steps"><li><strong>吸气</strong><p>光环展开时，用鼻子轻轻吸气。</p></li><li><strong>补吸</strong><p>光环再扩大一点，顺势再轻吸一小口。</p></li><li><strong>呼气</strong><p>随着光环收拢，用嘴慢慢呼气。按舒服的幅度即可。</p></li></ol>
+    <button type="button" class="primary-button close-dialog dialog-primary">知道了</button>
+  </dialog>
+  <dialog id="breath-history-dialog" aria-labelledby="breath-history-title">
+    <div class="dialog-heading"><h2 id="breath-history-title">呼吸训练记录</h2><button type="button" class="icon-button close-dialog" aria-label="关闭呼吸记录">×</button></div>
+    <p class="dialog-lead">最近 100 次练习，保存在当前浏览器。</p><div id="breath-history-list"></div>
   </dialog>
   <div class="toast" id="toast" role="status" hidden></div>
   <noscript><p class="no-script">请启用 JavaScript 后使用训练功能。页面不会上传你的训练记录。</p></noscript>
