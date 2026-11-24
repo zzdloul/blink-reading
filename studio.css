@@ -58,7 +58,8 @@ input[type=range]:disabled { opacity: .55; }
 .reminder-controls button { min-height: 46px; font-size: 16px; padding: 10px 24px; }
 .reminder-controls label { display: flex; align-items: center; gap: 10px; font-size: 14px; }
 .reminder-controls label:first-of-type { margin-left: auto; }
-.reminder-controls select { min-height: 44px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fcfcf7; color: var(--ink); font: inherit; }
+.reminder-controls select, .reminder-controls input { min-height: 44px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fcfcf7; color: var(--ink); font: inherit; }
+.reminder-controls input { width: 6em; }
 .practice-tip { background: #e6ecdf; }
 @media (max-width: 820px) {
   .workspace { grid-template-columns: minmax(0, 1fr); }

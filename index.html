@@ -8,8 +8,8 @@
   <title>瞬读 blink · 找到你的默念节奏</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css?v=4">
-  <link rel="stylesheet" href="./studio.css?v=6">
-  <script type="module" src="./shell.js?v=7"></script>
+  <link rel="stylesheet" href="./studio.css?v=8">
+  <script type="module" src="./shell.js?v=8"></script>
 </head>
 <body>
   <a class="skip-link" href="#trainer">跳到训练区</a>
@@ -67,7 +67,7 @@
       </section>
 
       <section id="reminders-panel" aria-labelledby="reminder-title" hidden>
-        <div class="intro"><h1 id="reminder-title">自我提醒</h1><p>每 3 秒一句，留一段时间安静默读。</p></div>
+        <div class="intro"><h1 id="reminder-title">自我提醒</h1><p>按自己的节奏，留一段时间默读。</p></div>
         <div id="reminder-stage" class="reminder-stage" tabindex="-1">
           <p id="reminder-line" aria-live="polite" aria-atomic="true"></p>
         </div>
@@ -77,7 +77,11 @@
           <label for="reminder-topic">主题
             <select id="reminder-topic"><option value="focus">专注自控</option><option value="study">惜时学习与坚持</option><option value="money">节约用钱</option><option value="all">全部</option></select>
           </label>
+          <label for="reminder-interval">每句停留
+            <input id="reminder-interval" type="number" inputmode="decimal" min="0.5" max="300" step="any" value="3" required aria-describedby="reminder-interval-note"> 秒
+          </label>
         </div>
+        <p id="reminder-interval-note" class="field-note" role="status"></p>
       </section>
     </main>
     <footer>只和上一次的自己比较。</footer>
