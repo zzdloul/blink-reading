@@ -23,7 +23,7 @@ export function validateCustom(text) {
   return '';
 }
 
-function shuffle(items, random) {
+export function shuffle(items, random) {
   const result = [...items];
   for (let i = result.length - 1; i > 0; i--) {
     const j = Math.floor(random() * (i + 1));
