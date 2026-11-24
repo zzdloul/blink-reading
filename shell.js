@@ -1,5 +1,5 @@
 import { suspendReading, refreshReading } from './app.js?v=4';
-import { initReminders } from './reminders.js?v=9';
+import { initReminders } from './reminders.js?v=10';
 import { readData, writeData } from './storage.js';
 
 let storage;
