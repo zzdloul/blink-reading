@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css?v=4">
   <link rel="stylesheet" href="./studio.css?v=6">
-  <script type="module" src="./shell.js?v=6"></script>
+  <script type="module" src="./shell.js?v=7"></script>
 </head>
 <body>
   <a class="skip-link" href="#trainer">跳到训练区</a>
@@ -67,7 +67,7 @@
       </section>
 
       <section id="reminders-panel" aria-labelledby="reminder-title" hidden>
-        <div class="intro"><h1 id="reminder-title">自我提醒</h1><p>一句一句，在心里轻轻读过。</p></div>
+        <div class="intro"><h1 id="reminder-title">自我提醒</h1><p>每 3 秒一句，留一段时间安静默读。</p></div>
         <div id="reminder-stage" class="reminder-stage" tabindex="-1">
           <p id="reminder-line" aria-live="polite" aria-atomic="true"></p>
         </div>
@@ -76,9 +76,6 @@
           <button type="button" class="secondary-button" id="reminder-next">下一句</button>
           <label for="reminder-topic">主题
             <select id="reminder-topic"><option value="focus">专注自控</option><option value="study">惜时学习与坚持</option><option value="money">节约用钱</option><option value="all">全部</option></select>
-          </label>
-          <label for="reminder-interval">换句间隔
-            <select id="reminder-interval"><option value="3">3 秒</option><option value="5">5 秒</option><option value="8" selected>8 秒</option><option value="15">15 秒</option><option value="30">30 秒</option></select>
           </label>
         </div>
       </section>

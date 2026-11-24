@@ -1,5 +1,5 @@
 import { suspendReading, refreshReading } from './app.js?v=4';
-import { initReminders } from './reminders.js';
+import { initReminders } from './reminders.js?v=7';
 import { readData, writeData } from './storage.js';
 
 let storage;
@@ -23,6 +23,7 @@ function selectMode(mode, scroll = true) {
   document.querySelector('.skip-link').href = '#' + targets[mode];
   document.title = '瞬读 blink · ' + titles[mode];
   if (mode === 'reading') refreshReading();
+  if (mode === 'reminders') reminders.show();
   document.querySelector('.utility-nav').hidden = mode !== 'reading';
   if (scroll) window.scrollTo({ top: 0, behavior: 'instant' });
 }
