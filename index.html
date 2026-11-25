@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f6f5ef">
-  <meta name="description" content="瞬读：自由默念与自我提醒，自主调节阅读节奏。">
+  <meta name="description" content="瞬读：自由默念、自我提醒与判断训练。">
   <title>瞬读 blink · 找到你的默念节奏</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css?v=4">
-  <link rel="stylesheet" href="./studio.css?v=8">
-  <script type="module" src="./shell.js?v=10"></script>
+  <link rel="stylesheet" href="./studio.css?v=11">
+  <script type="module" src="./shell.js?v=11"></script>
 </head>
 <body>
   <a class="skip-link" href="#trainer">跳到训练区</a>
@@ -19,7 +19,7 @@
         <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11 3H6a3 3 0 0 0-3 3v5M21 3h5a3 3 0 0 1 3 3v5M29 21v5a3 3 0 0 1-3 3h-5M11 29H6a3 3 0 0 1-3-3v-5" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/></svg>
         <strong>瞬读</strong><span>blink</span>
       </a>
-      <nav class="mode-nav" aria-label="训练模式"><a href="#reading" data-mode="reading" aria-current="page">瞬读默念</a><a href="#reminders" data-mode="reminders">自我提醒</a></nav>
+      <nav class="mode-nav" aria-label="训练模式"><a href="#reading" data-mode="reading" aria-current="page">瞬读默念</a><a href="#reminders" data-mode="reminders">自我提醒</a><a href="#judgment" data-mode="judgment">判断训练</a></nav>
       <nav class="utility-nav" aria-label="主要导航"><button type="button" id="history-open">训练记录</button><button type="button" id="guide-open">使用指南</button></nav>
     </header>
     <main>
@@ -82,6 +82,31 @@
           </label>
         </div>
         <p id="reminder-interval-note" class="field-note" role="status"></p>
+      </section>
+      <section id="judgment-panel" aria-labelledby="judgment-title" hidden>
+        <div class="intro"><h1 id="judgment-title">判断训练</h1><p>按提示比较两张图。答完就换下一题。</p></div>
+        <div class="judgment-card" id="judgment-stage" tabindex="-1">
+          <div id="judgment-quiz">
+            <div class="judgment-meta"><span id="judgment-progress"></span><span id="judgment-points"></span></div>
+            <progress id="judgment-meter" aria-label="本轮完成题数" value="0" max="16"></progress>
+            <h2 id="judgment-rule" tabindex="-1"></h2>
+            <div class="judgment-figures">
+              <div class="judgment-figure" id="judgment-left" role="img"></div>
+              <div class="judgment-figure" id="judgment-right" role="img"></div>
+            </div>
+            <div class="judgment-options">
+              <button type="button" class="secondary-button" id="judgment-same" aria-describedby="judgment-rule">相同</button>
+              <button type="button" class="secondary-button" id="judgment-different" aria-describedby="judgment-rule">不同</button>
+            </div>
+            <p id="judgment-feedback"></p>
+            <p class="sr-only" id="judgment-announcement" role="status"></p>
+          </div>
+          <div id="judgment-summary" hidden>
+            <h2 id="judgment-score" tabindex="-1" aria-describedby="judgment-last"></h2>
+            <p id="judgment-last"></p>
+            <button type="button" class="primary-button" id="judgment-restart">再练一轮</button>
+          </div>
+        </div>
       </section>
     </main>
     <footer>只和上一次的自己比较。</footer>

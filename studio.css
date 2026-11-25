@@ -60,6 +60,40 @@ input[type=range]:disabled { opacity: .55; }
 .reminder-controls label:first-of-type { margin-left: auto; }
 .reminder-controls select, .reminder-controls input { min-height: 44px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fcfcf7; color: var(--ink); font: inherit; }
 .reminder-controls input { width: 6em; }
+.judgment-card {
+  max-width: 640px;
+  margin-inline: auto;
+  padding: clamp(16px, 4vw, 36px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fcfcf7;
+  box-shadow: 0 6px 22px #293f3309;
+}
+.judgment-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 14px; }
+.judgment-card progress { display: block; height: 5px; margin-block: 9px 22px; }
+.judgment-card h2 { font-size: clamp(24px, 4vw, 34px); text-align: center; }
+.judgment-figures {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(10px, 3vw, 18px); margin-block: 20px;
+}
+.judgment-figure {
+  display: grid; place-items: center; min-width: 0; height: clamp(104px, 22vw, 176px);
+  background: #f1f4ed; border: 1px solid #dce3d7; border-radius: 12px;
+}
+.judgment-figure::before {
+  content: ''; width: clamp(50px, 12vw, 86px); aspect-ratio: 1;
+  background: var(--figure-color);
+}
+.judgment-figure[data-color="0"] { --figure-color: #2468bd; }
+.judgment-figure[data-color="1"] { --figure-color: #bd5308; }
+.judgment-figure[data-color="2"] { --figure-color: #8c378e; }
+.judgment-figure[data-shape="0"]::before { border-radius: 50%; }
+.judgment-figure[data-shape="2"]::before { clip-path: polygon(50% 0, 100% 94%, 0 94%); }
+.judgment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.judgment-card .primary-button, .judgment-card .secondary-button { min-height: 48px; padding: 10px 16px; font-size: 16px; }
+#judgment-feedback { min-height: 3.2em; margin-top: 14px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+#judgment-summary { text-align: center; }
+#judgment-summary p { margin: 12px 0 20px; color: var(--muted); line-height: 1.6; }
 .practice-tip { background: #e6ecdf; }
 @media (max-width: 820px) {
   .workspace { grid-template-columns: minmax(0, 1fr); }

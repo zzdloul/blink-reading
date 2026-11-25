@@ -2,11 +2,15 @@
 
 数字、中文词语、英文单词连续闪现，在心里默念，自己掌控节奏。
 
-在线使用：[瞬读默念](https://zzdloul.github.io/blink-reading/#reading) · [自我提醒](https://zzdloul.github.io/blink-reading/#reminders)
+在线使用：[瞬读默念](https://zzdloul.github.io/blink-reading/#reading) · [自我提醒](https://zzdloul.github.io/blink-reading/#reminders) · [判断训练](https://zzdloul.github.io/blink-reading/#judgment)
 
 ## 自我提醒
 
 首次进入页面即自动轮播。每句默认停留 3 秒，可直接输入 0.5 至 300 秒，支持小数，设置立即生效并保存在当前浏览器。可暂停、继续或手动翻到下一句。切换模式或进入后台时会暂停。默认主题是考研专注，也可选择考研备考、节约用钱或全部，同一轮随机顺序中每句只出现一次。
+
+## 判断训练
+
+每轮 16 题。每题根据「只看颜色」或「只看形状」的提示，判断两张图相同或不同。提交后立即换题，并显示上一题的依据。每轮随机排列，无倒计时，最后统计答对题数。
 
 ## 使用
 

@@ -1,14 +1,16 @@
 import { suspendReading, refreshReading } from './app.js?v=4';
 import { initReminders } from './reminders.js?v=10';
+import { initJudgment } from './judgment.js?v=11';
 import { readData, writeData } from './storage.js';
 
 let storage;
 try { storage = window.localStorage; } catch { storage = null; }
 const reminders = initReminders(storage);
+initJudgment();
 let current = '';
-const modes = ['reading', 'reminders'];
-const targets = { reading: 'trainer', reminders: 'reminder-stage' };
-const titles = { reading: '自由默念', reminders: '自我提醒' };
+const modes = ['reading', 'reminders', 'judgment'];
+const targets = { reading: 'trainer', reminders: 'reminder-stage', judgment: 'judgment-stage' };
+const titles = { reading: '自由默念', reminders: '自我提醒', judgment: '判断训练' };
 function selectMode(mode, scroll = true) {
   if (!modes.includes(mode) || mode === current) return;
   if (current === 'reading') suspendReading();
