@@ -1,6 +1,6 @@
 import { suspendReading, refreshReading } from './app.js?v=4';
 import { initReminders } from './reminders.js?v=10';
-import { initJudgment } from './judgment.js?v=11';
+import { initJudgment } from './judgment.js?v=12';
 import { readData, writeData } from './storage.js';
 
 let storage;

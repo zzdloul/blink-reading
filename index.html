@@ -8,8 +8,8 @@
   <title>瞬读 blink · 找到你的默念节奏</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css?v=4">
-  <link rel="stylesheet" href="./studio.css?v=11">
-  <script type="module" src="./shell.js?v=11"></script>
+  <link rel="stylesheet" href="./studio.css?v=12">
+  <script type="module" src="./shell.js?v=12"></script>
 </head>
 <body>
   <a class="skip-link" href="#trainer">跳到训练区</a>
@@ -84,28 +84,27 @@
         <p id="reminder-interval-note" class="field-note" role="status"></p>
       </section>
       <section id="judgment-panel" aria-labelledby="judgment-title" hidden>
-        <div class="intro"><h1 id="judgment-title">判断训练</h1><p>按提示比较两张图。答完就换下一题。</p></div>
+        <div class="intro"><h1 id="judgment-title">判断训练</h1><p>每次作答后随机出下一题，想练多久都可以。</p></div>
         <div class="judgment-card" id="judgment-stage" tabindex="-1">
-          <div id="judgment-quiz">
-            <div class="judgment-meta"><span id="judgment-progress"></span><span id="judgment-points"></span></div>
-            <progress id="judgment-meter" aria-label="本轮完成题数" value="0" max="16"></progress>
-            <h2 id="judgment-rule" tabindex="-1"></h2>
-            <div class="judgment-figures">
-              <div class="judgment-figure" id="judgment-left" role="img"></div>
-              <div class="judgment-figure" id="judgment-right" role="img"></div>
-            </div>
-            <div class="judgment-options">
-              <button type="button" class="secondary-button" id="judgment-same" aria-describedby="judgment-rule">相同</button>
-              <button type="button" class="secondary-button" id="judgment-different" aria-describedby="judgment-rule">不同</button>
-            </div>
-            <p id="judgment-feedback"></p>
-            <p class="sr-only" id="judgment-announcement" role="status"></p>
+          <label class="judgment-mode" for="judgment-mode">玩法
+            <select id="judgment-mode">
+              <option value="evidence">证据够不够</option>
+              <option value="figures">颜色与形状</option>
+            </select>
+          </label>
+          <div class="judgment-meta"><span id="judgment-progress"></span><span id="judgment-points"></span></div>
+          <h2 id="judgment-rule"></h2>
+          <p class="judgment-context" id="judgment-context"></p>
+          <div class="judgment-figures" id="judgment-figures" hidden>
+            <div class="judgment-figure" id="judgment-left" role="img"></div>
+            <div class="judgment-figure" id="judgment-right" role="img"></div>
           </div>
-          <div id="judgment-summary" hidden>
-            <h2 id="judgment-score" tabindex="-1" aria-describedby="judgment-last"></h2>
-            <p id="judgment-last"></p>
-            <button type="button" class="primary-button" id="judgment-restart">再练一轮</button>
+          <div class="judgment-options">
+            <button type="button" class="secondary-button" id="judgment-same" aria-describedby="judgment-rule">证据够</button>
+            <button type="button" class="secondary-button" id="judgment-different" aria-describedby="judgment-rule">证据不够</button>
           </div>
+          <p id="judgment-feedback"></p>
+          <p class="sr-only" id="judgment-announcement" role="status"></p>
         </div>
       </section>
     </main>
