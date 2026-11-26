@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f6f5ef">
-  <meta name="description" content="瞬读：自由默念、自我提醒与判断训练。">
+  <meta name="description" content="瞬读：自由默念、自我提醒与快速决策识别训练。">
   <title>瞬读 blink · 找到你的默念节奏</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="stylesheet" href="./styles.css?v=4">
-  <link rel="stylesheet" href="./studio.css?v=12">
-  <script type="module" src="./shell.js?v=12"></script>
+  <link rel="stylesheet" href="./studio.css?v=15">
+  <script type="module" src="./shell.js?v=15"></script>
 </head>
 <body>
   <a class="skip-link" href="#trainer">跳到训练区</a>
@@ -19,7 +19,7 @@
         <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M11 3H6a3 3 0 0 0-3 3v5M21 3h5a3 3 0 0 1 3 3v5M29 21v5a3 3 0 0 1-3 3h-5M11 29H6a3 3 0 0 1-3-3v-5" stroke="currentColor" stroke-width="2.7" stroke-linecap="round"/></svg>
         <strong>瞬读</strong><span>blink</span>
       </a>
-      <nav class="mode-nav" aria-label="训练模式"><a href="#reading" data-mode="reading" aria-current="page">瞬读默念</a><a href="#reminders" data-mode="reminders">自我提醒</a><a href="#judgment" data-mode="judgment">判断训练</a></nav>
+      <nav class="mode-nav" aria-label="训练模式"><a href="#reading" data-mode="reading" aria-current="page">瞬读默念</a><a href="#reminders" data-mode="reminders">自我提醒</a><a href="#decision" data-mode="decision">快速决策</a></nav>
       <nav class="utility-nav" aria-label="主要导航"><button type="button" id="history-open">训练记录</button><button type="button" id="guide-open">使用指南</button></nav>
     </header>
     <main>
@@ -83,29 +83,81 @@
         </div>
         <p id="reminder-interval-note" class="field-note" role="status"></p>
       </section>
-      <section id="judgment-panel" aria-labelledby="judgment-title" hidden>
-        <div class="intro"><h1 id="judgment-title">判断训练</h1><p>每次作答后随机出下一题，想练多久都可以。</p></div>
-        <div class="judgment-card" id="judgment-stage" tabindex="-1">
-          <label class="judgment-mode" for="judgment-mode">玩法
-            <select id="judgment-mode">
-              <option value="evidence">证据够不够</option>
-              <option value="figures">颜色与形状</option>
-            </select>
-          </label>
-          <div class="judgment-meta"><span id="judgment-progress"></span><span id="judgment-points"></span></div>
-          <h2 id="judgment-rule"></h2>
-          <p class="judgment-context" id="judgment-context"></p>
-          <div class="judgment-figures" id="judgment-figures" hidden>
-            <div class="judgment-figure" id="judgment-left" role="img"></div>
-            <div class="judgment-figure" id="judgment-right" role="img"></div>
+      <section id="decision-panel" aria-labelledby="decision-title" hidden>
+        <div class="intro"><h1 id="decision-title">快速决策</h1><p>看规则扫一眼心里秒判，不用点选项，接着自动亮答案。</p></div>
+        <div class="decision-workspace">
+          <div class="decision-stage" id="decision-stage" tabindex="-1" data-phase="cue" data-running="false" data-kind="figures">
+            <div class="decision-meta">
+              <span class="decision-status"><span class="decision-badge" id="decision-kind-badge">颜色与形状</span><i id="decision-phase-dot"></i><span id="decision-phase-text">看图 · 心里秒判</span></span>
+              <span class="decision-meta-actions">
+                <span class="decision-shortcut-hint"><kbd>→</kbd> 快进 · <kbd>空格</kbd> 暂停 · <kbd>F</kbd> 专注</span>
+                <button type="button" id="decision-focus-exit" class="text-button" hidden>退出专注</button>
+                <button type="button" class="icon-button decision-focus-btn" id="decision-focus-toggle" aria-label="进入专注模式" aria-pressed="false" title="专注模式（F）"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              </span>
+            </div>
+            <div class="decision-meter" aria-hidden="true"><span id="decision-meter-bar"></span></div>
+            <div class="decision-content">
+              <h2 class="decision-question" id="decision-question">只看颜色</h2>
+              <div class="decision-visual">
+                <div class="decision-figures" id="decision-figures">
+                  <div class="decision-figure" id="decision-figure-left" role="img"></div>
+                  <div class="decision-figure" id="decision-figure-right" role="img"></div>
+                </div>
+                <div class="decision-stroop" id="decision-stroop" hidden>
+                  <span class="decision-stroop-word" id="decision-stroop-word" role="img">蓝</span>
+                </div>
+                <div class="decision-magnitude" id="decision-magnitude" hidden>
+                  <div class="decision-num-card" id="decision-num-left" role="img">2</div>
+                  <div class="decision-num-card" id="decision-num-right" role="img">8</div>
+                </div>
+                <div class="decision-arrows" id="decision-arrows" role="img" hidden>
+                  <span class="decision-arrow" data-dir="left"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M25 16H7m0 0 7-7m-7 7 7 7" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="decision-arrow" data-dir="left"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M25 16H7m0 0 7-7m-7 7 7 7" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="decision-arrow" data-dir="right"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M25 16H7m0 0 7-7m-7 7 7 7" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="decision-arrow" data-dir="left"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M25 16H7m0 0 7-7m-7 7 7 7" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="decision-arrow" data-dir="left"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M25 16H7m0 0 7-7m-7 7 7 7" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </div>
+              </div>
+              <div class="decision-reveal">
+                <div class="decision-answer-row">
+                  <span class="decision-visual-cue" id="decision-visual-cue" aria-hidden="true" hidden></span>
+                  <strong class="decision-answer" id="decision-answer" data-tone="placeholder">心里秒判…</strong>
+                </div>
+                <p class="decision-reason" id="decision-reason">不用点选项，心里默选即可</p>
+              </div>
+            </div>
           </div>
-          <div class="judgment-options">
-            <button type="button" class="secondary-button" id="judgment-same" aria-describedby="judgment-rule">证据够</button>
-            <button type="button" class="secondary-button" id="judgment-different" aria-describedby="judgment-rule">证据不够</button>
+          <div class="decision-controls">
+            <div class="decision-actions">
+              <button type="button" class="primary-button" id="decision-play">开始轮播</button>
+              <button type="button" class="secondary-button" id="decision-step">看答案</button>
+              <div class="segmented decision-presets" role="group" aria-label="快捷节奏">
+                <button type="button" data-decision-preset="calm" aria-pressed="false">舒缓</button>
+                <button type="button" data-decision-preset="standard" aria-pressed="true">标准</button>
+                <button type="button" data-decision-preset="fast" aria-pressed="false">极速</button>
+              </div>
+            </div>
+            <div class="decision-fields">
+              <label for="decision-mode">玩法
+                <select id="decision-mode">
+                  <option value="all">全部混合</option>
+                  <option value="figures">颜色与形状</option>
+                  <option value="stroop">字与颜色</option>
+                  <option value="magnitude">数字与字号</option>
+                  <option value="arrows">箭头方向</option>
+                </select>
+              </label>
+              <label for="decision-look-seconds">看图
+                <input id="decision-look-seconds" type="number" inputmode="decimal" min="0.5" max="60" step="any" value="1.5" required aria-describedby="decision-note"> 秒
+              </label>
+              <label for="decision-answer-seconds">看答案
+                <input id="decision-answer-seconds" type="number" inputmode="decimal" min="0.5" max="60" step="any" value="1.0" required aria-describedby="decision-note"> 秒
+              </label>
+            </div>
           </div>
-          <p id="judgment-feedback"></p>
-          <p class="sr-only" id="judgment-announcement" role="status"></p>
+          <p id="decision-note" class="field-note" role="status"></p>
         </div>
+        <p class="sr-only" id="decision-announcement" aria-live="polite" aria-atomic="true"></p>
       </section>
     </main>
     <footer>只和上一次的自己比较。</footer>
